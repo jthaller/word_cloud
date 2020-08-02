@@ -1,11 +1,17 @@
+'''Jeremy Thaller
+August 2nd, 2020. Munich.
+
+Quick one day build. I ended up not re-using any code.
+
+This script opens a json, fixes the encoding bug, then creates a pandas data frame with 
+sender and content columns. The messages are cleaned with regex and then saved as a pickle.
+'''
+
 import pickle
 import re, string
-import numpy as np
 import pandas as pd
-
 import json
-import pickle
-import pandas as pd
+
 
 
 
@@ -49,29 +55,34 @@ with open(sarah_json1) as f:
 with open(sarah_json2, "r") as f:
     fixed_json = json.load(f, object_hook=parse_obj)
     df.append(pd.json_normalize(fixed_json["messages"]))
-    print(df.head())
+    # print(df.head())
 
 
 df = df.drop(columns = ['audio_files','reactions', 'photos', 'call_duration', 'share.link', 'missed', 'videos', 'gifs', 'files', 'sticker.uri', 'timestamp_ms'])
 
-print(df['type'].unique())
+# print(df['type'].unique())
 df = df[df.type == 'Generic']
 df = df[df.content.notnull()]
 df = df.drop(columns = 'type')
-print(df.head())
+print(df.head(5))
 
 # clean up content 
+df.content = df.content.str.lower()
 df = df.replace(['(?:\@|https?\://)\S+'], '', regex=True)
-# df = df.replace(['honey*'], 'honey')
+df = df.replace(regex='honey{1,}', value='honey')
+df = df.replace(regex='(?i)b{3,}', value=' bb')
+df = df.replace(regex='(?i)sarah{1,}', value=' Sarah')
+# df = df.replace(chr(''').decode('utf-8'), '\'')
+# '’'
+print(df.head(5))
 
-# df = df.replace('/[^0-9a-zA-Z]/g', "")
-#idk wtf went wrong with facebook's encoding that this needs to be fixed
-# df = re.sub(r'[\xc2-\xf4][\x80-\xbf]+',lambda m: m.group(0).encode('latin1').decode('utf8'), df)
-print(df.head())
 
-print(df.content.str.split(expand=True).stack().value_counts()[20:40])
-# print(df.content.str.split(expand=True).stack())
-
+# rsqm = '’'.decode('utf-8') #U+2019: right single quotation mark
+# if rsqm in df.content:
+#     df.content = df.content.replace(rsqm,'\'')
+# text_posts[post_id] = str.lower(text.encode('utf-8','replace'))
+print(df.head(5))
+# print(df.content.str.split(expand=True).stack().value_counts()[""])
 
 with open('sarah_cleaned_messages_df.pickle', 'wb') as handle:
     pickle.dump(df, handle, protocol=pickle.HIGHEST_PROTOCOL)
