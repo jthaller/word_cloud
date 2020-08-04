@@ -25,7 +25,7 @@ def plot_cloud(wordcloud):
     # Set figure size
     fig = plt.figure(figsize=(40, 30))
     # Display image
-    plt.imshow(wordcloud, interpolation=bilinear) 
+    plt.imshow(wordcloud) 
     # No axis details
     plt.axis("off")
     plt.show()
@@ -34,6 +34,6 @@ def plot_cloud(wordcloud):
 
 # Generate wordcloud
 wordcloud = WordCloud(width = 3000, height = 2000, random_state=1, background_color='pink',
-                      colormap='Set2', collocations=False, stopwords = ['lol', 'ok', 'good', 'lolol', 'don', 've'] + list(STOPWORDS)).generate(' '.join(df['content']))
+                      colormap='Set2', collocations=False, stopwords = ['bc','didn','bu','lol', 'ok', 'good', 'lolol', 'don', 't', 'll','nt', 've'] + list(STOPWORDS)).generate(' '.join(df['content']))
 # Plot
 plot_cloud(wordcloud)
