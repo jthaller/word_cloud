@@ -17,9 +17,8 @@ from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 import matplotlib.pyplot as plt
 
 
-df = pd.read_pickle('thomas_cleaned_messages_df.pickle')
-# print(df.head())
-# print(df.content.str.split(expand=True).stack().value_counts()["don"])
+df = pd.read_pickle('sarah_cleaned_messages_df.pickle')
+
 
 # Define a function to plot word cloud
 def plot_cloud(wordcloud):
@@ -30,12 +29,13 @@ def plot_cloud(wordcloud):
     # No axis details
     plt.axis("off")
     plt.show()
-    fig.savefig("thomas_cloud.png")
+    fig.savefig("sarah_cloud.png")
 
 
 # Generate wordcloud
 wordcloud = WordCloud(width = 3000, height = 2000, random_state=1, background_color='blue',
-                      colormap='Set2', collocations=False, stopwords = ['bc','didn','bu','lol', 'ok', 'good', 'lolol', 'don', 't', 'll','nt', 've'] + list(STOPWORDS)).generate(' '.join(df['content']))
+colormap='Set2', collocations=False, stopwords = ['lol', 'ok', 'good', 'lolol', 're'] + list(STOPWORDS)).generate(' '.join(df['content']))
+                    #   colormap='Set2', collocations=False, stopwords = ['bc','didn','bu','lol', 'ok', 'good', 'lolol', 'don', 't', 'll','nt', 've'] + list(STOPWORDS)).generate(' '.join(df['content']))
 
 # Plot
 plot_cloud(wordcloud)

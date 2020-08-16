@@ -39,59 +39,44 @@ true = True
 def parse_obj(obj):
     for key in obj:
         if isinstance(obj[key], str):
+            obj[key] = obj[key].replace('â\x80\x99', "\'") #needed to brute force convert these characters
+            obj[key] = obj[key].replace('\u00e2\u0080\u0099', "\'") #needed to brute force convert these characters
             obj[key] = obj[key].encode('latin_1').decode('utf-8')
         elif isinstance(obj[key], list):
             obj[key] = list(map(lambda x: x if type(x) != str else x.encode('latin_1').decode('utf-8'), obj[key]))
         pass
     return obj
 
-with open(thomas_json1) as f:
+with open(sarah_json1) as f:
      fixed_json = json.load(f, object_hook=parse_obj)
      df = pd.json_normalize(fixed_json["messages"])
 
+with open(sarah_json2) as f:
+    fixed_json = json.load(f, object_hook=parse_obj)
+    df.append(pd.json_normalize(fixed_json["messages"]))
+    print(df.head())
 
-# with open(mike_json2) as f:
-#     fixed_json = json.load(f, object_hook=parse_obj)
-#     df.append(pd.json_normalize(fixed_json["messages"]))
-    # print(df.head())
-
-# if u'body' in p:
-#     post_id = str(p[u'id'])
-#     text = p[u'body']
-#     rsqm = '’'.decode('utf-8') #U+2019: right single quotation mark
-#     if rsqm in text:
-#         text = text.replace(rsqm,'\'')
-#     text_posts[post_id] = str.lower(text.encode('utf-8','replace'))
-
-
-df = df.drop(columns = ['ip', 'audio_files','reactions', 'photos', 'call_duration', 'share.link', 'missed', 'videos', 'gifs', 'files', 'sticker.uri', 'timestamp_ms'], errors='ignore')
-
-# print(df['type'].unique())
+# drop the messages with shares and pictures and stuff
 df = df[df.type == 'Generic']
 df = df[df.content.notnull()]
 df = df.drop(columns = 'type')
-print(df.head(5))
+
+# drop the unused columns. We only care about the "content column" and I'll keep the "sender" column for now
+df = df.drop(columns = ['type', 'ip', 'audio_files','reactions', 'photos', 'call_duration', 'share.link', 'missed', 'videos', 'gifs', 'files', 'sticker.uri', 'timestamp_ms'], errors='ignore')
+
+
 
 # clean up content 
-df.content = df.content.str.lower()
+# df.content = df.content.str.lower()
 df = df.replace(['(?:\@|https?\://)\S+'], '', regex=True)
-df = df.replace(regex='honey{1,}', value='honey')
+df = df.replace(regex='hone{1,}y{1,}', value='honey')
 df = df.replace(regex='(?i)b{3,}', value=' bb')
 df = df.replace(regex='(?i)sarah{1,}', value=' Sarah')
 df = df.replace(regex='\*', value='')
-
-
-print(u'\u2019')
-
-
-# rsqm = '’'.decode('utf-8') #U+2019: right single quotation mark
-# if rsqm in df.content:
-#     df.content = df.content.replace(rsqm,'\'')
-# text_posts[post_id] = str.lower(text.encode('utf-8','replace'))
 print(df.head(5))
-# print(df.content.str.split(expand=True).stack().value_counts()["bc"])
 
-with open('thomas_cleaned_messages_df.pickle', 'wb') as handle:
+#save as a pickle. This will be read in by make_cloud.py
+with open('sarah_cleaned_messages_df.pickle', 'wb') as handle:
     pickle.dump(df, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
