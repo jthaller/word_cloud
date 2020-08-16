@@ -13,10 +13,11 @@ from os import path
 # from PIL import Image
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 
-# %matplotlib notebook
+# %matplotlib inline
 import matplotlib.pyplot as plt
 
-df = pd.read_pickle('sarah_cleaned_messages_df.pickle')
+
+df = pd.read_pickle('thomas_cleaned_messages_df.pickle')
 # print(df.head())
 # print(df.content.str.split(expand=True).stack().value_counts()["don"])
 
@@ -29,11 +30,14 @@ def plot_cloud(wordcloud):
     # No axis details
     plt.axis("off")
     plt.show()
-    fig.savefig("sarah_cloud.png")
+    fig.savefig("thomas_cloud.png")
 
 
 # Generate wordcloud
-wordcloud = WordCloud(width = 3000, height = 2000, random_state=1, background_color='pink',
+wordcloud = WordCloud(width = 3000, height = 2000, random_state=1, background_color='blue',
                       colormap='Set2', collocations=False, stopwords = ['bc','didn','bu','lol', 'ok', 'good', 'lolol', 'don', 't', 'll','nt', 've'] + list(STOPWORDS)).generate(' '.join(df['content']))
+
 # Plot
 plot_cloud(wordcloud)
+
+

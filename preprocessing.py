@@ -45,14 +45,14 @@ def parse_obj(obj):
         pass
     return obj
 
-with open(sarah_json1) as f:
+with open(thomas_json1) as f:
      fixed_json = json.load(f, object_hook=parse_obj)
      df = pd.json_normalize(fixed_json["messages"])
 
 
-with open(sarah_json2) as f:
-    fixed_json = json.load(f, object_hook=parse_obj)
-    df.append(pd.json_normalize(fixed_json["messages"]))
+# with open(mike_json2) as f:
+#     fixed_json = json.load(f, object_hook=parse_obj)
+#     df.append(pd.json_normalize(fixed_json["messages"]))
     # print(df.head())
 
 # if u'body' in p:
@@ -64,7 +64,7 @@ with open(sarah_json2) as f:
 #     text_posts[post_id] = str.lower(text.encode('utf-8','replace'))
 
 
-df = df.drop(columns = ['audio_files','reactions', 'photos', 'call_duration', 'share.link', 'missed', 'videos', 'gifs', 'files', 'sticker.uri', 'timestamp_ms'])
+df = df.drop(columns = ['ip', 'audio_files','reactions', 'photos', 'call_duration', 'share.link', 'missed', 'videos', 'gifs', 'files', 'sticker.uri', 'timestamp_ms'], errors='ignore')
 
 # print(df['type'].unique())
 df = df[df.type == 'Generic']
@@ -78,6 +78,8 @@ df = df.replace(['(?:\@|https?\://)\S+'], '', regex=True)
 df = df.replace(regex='honey{1,}', value='honey')
 df = df.replace(regex='(?i)b{3,}', value=' bb')
 df = df.replace(regex='(?i)sarah{1,}', value=' Sarah')
+df = df.replace(regex='\*', value='')
+
 
 print(u'\u2019')
 
@@ -89,7 +91,7 @@ print(u'\u2019')
 print(df.head(5))
 # print(df.content.str.split(expand=True).stack().value_counts()["bc"])
 
-with open('sarah_cleaned_messages_df.pickle', 'wb') as handle:
+with open('thomas_cleaned_messages_df.pickle', 'wb') as handle:
     pickle.dump(df, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
