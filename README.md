@@ -6,4 +6,4 @@ The project takes my facebook chat data (stored as a JSON) and creates a word cl
 ![](https://github.com/jthaller/word_cloud/blob/master/sarah_cloud.png)
 
 ## What's next
-I'm not thrilled with this because the clouds for my friends are all pretty similar. That shouldn't be surprising. I wrote it so it's basically just finding the most common words that aren't included in the STOPWORDS list. It would be better to give it a full corpus of and then do TF-IDF for each friend's chat in order to find the most important words for each friend.
+I'm not thrilled with this implimentation because the clouds for my friends are all pretty similar. That shouldn't be surprising, though. I wrote it so that it's basically just finding the most common words that aren't included in the STOPWORDS list. It would be better to give it a full corpus of and then do TF-IDF for each friend's chat in order to find the most important words for each friend.
