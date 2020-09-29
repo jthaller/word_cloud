@@ -12,6 +12,7 @@ import pandas as pd
 from os import path
 # from PIL import Image
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
+from nltk.corpus import stopwords
 
 # %matplotlib inline
 import matplotlib.pyplot as plt
@@ -33,9 +34,13 @@ def plot_cloud(wordcloud):
 
 
 # Generate wordcloud
+# wordcloud = WordCloud(width = 3000, height = 2000, random_state=1, background_color='blue',
+# colormap='Set2', collocations=False, stopwords = ['lol', 'ok', 'good', 'lolol', 're'] + list(STOPWORDS)).generate(' '.join(df['content']))
+#                     #   colormap='Set2', collocations=False, stopwords = ['bc','didn','bu','lol', 'ok', 'good', 'lolol', 'don', 't', 'll','nt', 've'] + list(STOPWORDS)).generate(' '.join(df['content']))
 wordcloud = WordCloud(width = 3000, height = 2000, random_state=1, background_color='blue',
-colormap='Set2', collocations=False, stopwords = ['lol', 'ok', 'good', 'lolol', 're'] + list(STOPWORDS)).generate(' '.join(df['content']))
+colormap='Set2', collocations=False).generate(' '.join(df['content']))
                     #   colormap='Set2', collocations=False, stopwords = ['bc','didn','bu','lol', 'ok', 'good', 'lolol', 'don', 't', 'll','nt', 've'] + list(STOPWORDS)).generate(' '.join(df['content']))
+
 
 # Plot
 plot_cloud(wordcloud)
